@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Convertor</title>
+</head>
+<body>
+    <div id="main">
+        <h2>Color Convertor</h2>
+        <div id="color"></div>
+        <label for="color" id="color-label">
+            <p>HEXA: #ffffff</p>
+            <p>HEX: #ffffff</p>
+            <p>RGBA: rgb(255,255,255,1.00)</p>
+            <p>RGB: rgb(255,255,255)</p>
+            <p>hsl: -</p>
+            <p>hsla: -</p>
+        </label>
+        <div>
+            <div>
+                <label for="a" id="a-label">alpha: 255</label>
+                <input type="range" autocomplete="false" id="a" min="0" max="255" value="0">
+            </div>
+            <div>
+                <label for="r" id="r-label">♥ red : 255</label>
+                <input type="range" autocomplete="false" id="r" min="0" max="255" value="0">
+            </div>
+            <div>
+                <label for="g" id="g-label">green: 255</label>
+                <input type="range" autocomplete="false" id="g" min="0" max="255" value="0">
+            </div>
+            <div>
+                <label for="b" id="b-label"> blue : 255</label>
+                <input type="range" autocomplete="false" id="b" min="0" max="255" value="0">
+            </div>
+        </div>
+    </div>
+    <style>
+        *{
+            margin: 5px;
+            color: #8b8c91;
+        }
+        html,body{
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+            display: block;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: #202225;
+        }
+        body,#main{
+            background-image: url(./bg1.svg), url(./bg2.svg);
+            background-repeat: no-repeat, no-repeat;
+            background-position: bottom left, bottom right;
+            background-size: contain;
+        }
+        #main{
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            background-color: #2f3136;
+            transition: 0.5s;
+        }
+        #main>label{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+        }
+        #main>div:last-child>div>input{
+            transform: translateY(15px);
+        }
+        #color{
+            border-radius: 10px;
+            width: 250px;
+            height: 250px;
+            background-color: #ffffff;
+        }
+    </style>
+    <script>
+        const hexa = {a:255,r:255,g:255,b:255}
+        const update = async () => {       
+            hexa.a=parseInt(document.getElementById('a').value);
+            hexa.r=parseInt(document.getElementById('r').value);
+            hexa.g=parseInt(document.getElementById('g').value);
+            hexa.b=parseInt(document.getElementById('b').value);
+            
+            document.getElementById('a-label').innerHTML=`alpha: ${hexa.a}`;
+            document.getElementById('r-label').innerHTML=`♥ red : ${hexa.r}`;
+            document.getElementById('g-label').innerHTML=`green: ${hexa.g}`;
+            document.getElementById('b-label').innerHTML=` blue : ${hexa.b}`;
+
+            const HEXA = convertToHEXA(hexa.a,hexa.r,hexa.g,hexa.b)
+            const HEX = convertToHEX(hexa.a,hexa.r,hexa.g,hexa.b)
+            const RGBA = convertToRGBA(hexa.a,hexa.r,hexa.g,hexa.b)
+            const RGB = convertToRGB(hexa.a,hexa.r,hexa.g,hexa.b)
+            console.log(HEXA,HEX,RGBA,RGB);
+            //hsl in comming and hsla
+            
+            document.getElementById('color-label').innerHTML=`
+            <p>HEXA: ${HEXA}</p>
+            <p>HEX: ${HEX}</p>
+            <p>RGBA: ${RGBA}</p>
+            <p>RGB: ${RGB}</p>
+            <p>hsl: -</p>
+            <p>hsla: -</p>
+            `
+            document.getElementById('color').style.backgroundColor=HEXA
+        }
+        const convertToHEXA = (a,r,g,b) => {
+            a=a<10?'0'+a:a
+            r=r<10?'0'+r:r
+            g=g<10?'0'+g:g
+            b=b<10?'0'+b:b
+            return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}${a==255?'':a.toString(16)}`
+        }
+        const convertToHEX = (a,r,g,b) => {
+            r=r<10?'0'+r:r
+            g=g<10?'0'+g:g
+            b=b<10?'0'+b:b
+            return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`
+        }
+        const convertToRGBA = (a,r,g,b) => {
+            return `rgb(${r},${g},${b},${(a/255).toFixed(2)})`
+        }
+        const convertToRGB = (a,r,g,b) => {
+            return `rgb(${r},${g},${b})`
+        }
+        //on load make zero value
+        document.getElementById('a').value=255;
+        document.getElementById('r').value=255;
+        document.getElementById('g').value=255;
+        document.getElementById('b').value=255;
+
+        document.getElementById('a').onchange=update;
+        document.getElementById('r').onchange=update;
+        document.getElementById('g').onchange=update;
+        document.getElementById('b').onchange=update;
+    </script>
+</body>
+</html>
