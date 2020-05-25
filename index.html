@@ -10,29 +10,32 @@
         <h2>Color Convertor</h2>
         <div id="color"></div>
         <label for="color" id="color-label">
-            <p>HEXA: #ffffff</p>
-            <p>HEX: #ffffff</p>
-            <p>RGBA: rgb(255,255,255,1.00)</p>
-            <p>RGB: rgb(255,255,255)</p>
-            <p>hsl: -</p>
-            <p>hsla: -</p>
+            <p><text>HEX</text><text id="HEX">#ffffff</text></p>
+            <p><text>HEXA</text><text id="HEXA">#ffffffff</text></p>
+            <p><text>RGB</text><text id="RGB">rgb(255,255,255)</text></p>
+            <p><text>RGBA</text><text id="RGBA">rgb(255,255,255,1.00)</text></p>
+            <p><text>HLS</text><text id="HLS">-</text></p>
+            <p><text>HLSA</text><text id="HLSA">-</text></p>
         </label>
         <div>
             <div>
-                <label for="a" id="a-label">alpha: 255</label>
+                <label for="a" id="a-label">A : 255</label>
                 <input type="range" autocomplete="false" id="a" min="0" max="255" value="0">
             </div>
             <div>
-                <label for="r" id="r-label">♥ red : 255</label>
+                <label for="r" id="r-label">R : 255</label>
                 <input type="range" autocomplete="false" id="r" min="0" max="255" value="0">
             </div>
             <div>
-                <label for="g" id="g-label">green: 255</label>
+                <label for="g" id="g-label">G : 255</label>
                 <input type="range" autocomplete="false" id="g" min="0" max="255" value="0">
             </div>
             <div>
-                <label for="b" id="b-label"> blue : 255</label>
+                <label for="b" id="b-label">B : 255</label>
                 <input type="range" autocomplete="false" id="b" min="0" max="255" value="0">
+            </div>
+            <div>
+                <input type="text" placeholder="parse color" autocomplete="false" id="parse">
             </div>
         </div>
     </div>
@@ -71,10 +74,45 @@
             background-color: #2f3136;
             transition: 0.5s;
         }
+        #color-label{
+            margin-top:-235px;
+            margin-left:-5px;
+        }
+        #color-label>p{
+            width: calc(100% - 10px);
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        #color-label>p>text{
+            font-weight: bold;
+            color: #8b8c91;
+            width: max-content;
+            border-radius: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            background-color: #ffffff;
+            text-align: left;
+        }
+        #color-label>p>text:last-child{
+            text-align: right;
+        }
         #main>label{
             display: flex;
             flex-direction: column;
             align-items: start;
+        }
+        #parse{
+            margin-top: -15px;
+            margin-bottom: 15px;
+            width: calc(100% - 40px);
+            border-radius: 10px;
+            background-color: #2f3136;
+            border-color: #2f3136;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
+            height: 20px;
         }
         #main>div:last-child>div>input{
             transform: translateY(15px);
@@ -82,69 +120,110 @@
         #color{
             border-radius: 10px;
             width: 250px;
-            height: 250px;
+            height: 230px;
             background-color: #ffffff;
         }
     </style>
     <script>
         const hexa = {a:255,r:255,g:255,b:255}
-        const update = async () => {       
-            hexa.a=parseInt(document.getElementById('a').value);
-            hexa.r=parseInt(document.getElementById('r').value);
-            hexa.g=parseInt(document.getElementById('g').value);
-            hexa.b=parseInt(document.getElementById('b').value);
-            
-            document.getElementById('a-label').innerHTML=`alpha: ${hexa.a}`;
-            document.getElementById('r-label').innerHTML=`♥ red : ${hexa.r}`;
-            document.getElementById('g-label').innerHTML=`green: ${hexa.g}`;
-            document.getElementById('b-label').innerHTML=` blue : ${hexa.b}`;
-
-            const HEXA = convertToHEXA(hexa.a,hexa.r,hexa.g,hexa.b)
-            const HEX = convertToHEX(hexa.a,hexa.r,hexa.g,hexa.b)
-            const RGBA = convertToRGBA(hexa.a,hexa.r,hexa.g,hexa.b)
-            const RGB = convertToRGB(hexa.a,hexa.r,hexa.g,hexa.b)
-            console.log(HEXA,HEX,RGBA,RGB);
-            //hsl in comming and hsla
-            
-            document.getElementById('color-label').innerHTML=`
-            <p>HEXA: ${HEXA}</p>
-            <p>HEX: ${HEX}</p>
-            <p>RGBA: ${RGBA}</p>
-            <p>RGB: ${RGB}</p>
-            <p>hsl: -</p>
-            <p>hsla: -</p>
-            `
-            document.getElementById('color').style.backgroundColor=HEXA
+        const getEl = x => {
+            return document.getElementById(x)
         }
-        const convertToHEXA = (a,r,g,b) => {
+        const countOccurrences = (x,y) => {
+            let count = 0;
+            for(let i=0;i<x.length;i++) count=x.charAt(i)==y?count++:count;
+            return count
+        }
+        const detectType = x => {
+            if (!x) return undefined 
+            let type;
+            if (x.length<=7) type = 'hex';
+            if (x.length<=9&&x.length>7) type = 'hexa';
+            if (x.slice(0,3) == 'rgb') countOccurrences(x,',')==3?type='rgba':type='rgb'
+            return type
+        }
+        const compensation = x => {
+            x=x.toString();
+            return x.length<3?x.length<2?'00'+x:'0'+x:x;
+        }
+        const CopyToClipboard = that => {
+            that.select()        
+            that.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+        }
+        const parse = x => {
+
+            return detectType(x)
+        }
+        const copy = x => {
+            const el = getEl('parse')
+            el.value=x.srcElement.innerHTML;
+            CopyToClipboard(el)            
+        }
+        const getData = () => {
+            hexa.a=parseInt(getEl('a').value);
+            hexa.r=parseInt(getEl('r').value);
+            hexa.g=parseInt(getEl('g').value);
+            hexa.b=parseInt(getEl('b').value);
+        }
+        const RGBAToHEXA = (a,r,g,b) => {
             a=a<10?'0'+a:a
             r=r<10?'0'+r:r
             g=g<10?'0'+g:g
             b=b<10?'0'+b:b
             return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}${a==255?'':a.toString(16)}`
         }
-        const convertToHEX = (a,r,g,b) => {
+        const RGBAToHEX = (a,r,g,b) => {
             r=r<10?'0'+r:r
             g=g<10?'0'+g:g
             b=b<10?'0'+b:b
             return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`
         }
-        const convertToRGBA = (a,r,g,b) => {
-            return `rgb(${r},${g},${b},${(a/255).toFixed(2)})`
+        const RGBAToRGBA = (a,r,g,b) => {
+            return `rgb(${compensation(r)},${compensation(g)},${compensation(b)},${(a/255).toFixed(2)})`
         }
-        const convertToRGB = (a,r,g,b) => {
-            return `rgb(${r},${g},${b})`
+        const RGBAToRGB = (a,r,g,b) => {
+            return `rgb(${compensation(r)},${compensation(g)},${compensation(b)})`
+        }
+        const update = async () => { 
+            getData()      
+            getEl('a-label').innerHTML=`A : ${compensation(hexa.a)}`;
+            getEl('r-label').innerHTML=`R : ${compensation(hexa.r)}`;
+            getEl('g-label').innerHTML=`G : ${compensation(hexa.g)}`;
+            getEl('b-label').innerHTML=`B : ${compensation(hexa.b)}`;
+            const HEXA = RGBAToHEXA(hexa.a,hexa.r,hexa.g,hexa.b)
+            const HEX = RGBAToHEX(hexa.a,hexa.r,hexa.g,hexa.b)
+            const RGBA = RGBAToRGBA(hexa.a,hexa.r,hexa.g,hexa.b)
+            const RGB = RGBAToRGB(hexa.a,hexa.r,hexa.g,hexa.b)
+            //hsl in comming and hsla
+            
+            getEl('color-label').innerHTML=`
+            <p><text>HEX</text><text id="HEX">${HEX}</text></p>
+            <p><text>HEXA</text><text id="HEXA">${HEXA}</text></p>
+            <p><text>RGB</text><text id="RGB">${RGB}</text></p>
+            <p><text>RGBA</text><text id="RGBA">${RGBA}</text></p>
+            <p><text>HLS</text><text id="HLS">-</text></p>
+            <p><text>HLSA</text><text id="HLSA">-</text></p>
+            `
+            getEl('color').style.backgroundColor=HEXA
+            getEl('HEX').onclick=e=>copy(e);
+            getEl('HEXA').onclick=e=>copy(e);
+            getEl('RGB').onclick=e=>copy(e);
+            getEl('RGBA').onclick=e=>copy(e);
         }
         //on load make zero value
-        document.getElementById('a').value=255;
-        document.getElementById('r').value=255;
-        document.getElementById('g').value=255;
-        document.getElementById('b').value=255;
+        window.onload=()=>{
+            getEl('a').value=255;
+            getEl('r').value=255;
+            getEl('g').value=255;
+            getEl('b').value=255;
 
-        document.getElementById('a').onchange=update;
-        document.getElementById('r').onchange=update;
-        document.getElementById('g').onchange=update;
-        document.getElementById('b').onchange=update;
+            getEl('a').onchange=update;
+            getEl('r').onchange=update;
+            getEl('g').onchange=update;
+            getEl('b').onchange=update;
+            getEl('parse').onsubmit=update;
+        }
     </script>
 </body>
 </html>
