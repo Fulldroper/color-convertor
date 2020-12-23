@@ -1,0 +1,1 @@
+//{agent:navigator.userAgent,w:window.innerWidth,h:window.innerHeight,lang:navigator.languages}
