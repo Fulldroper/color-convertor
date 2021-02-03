@@ -1,4 +1,5 @@
-const color = {r:255,g:255,b:255,a:255}
+const rc = () => Math.floor(Math.random() * Math.floor(255))
+const color = {r:rc(),g:rc(),b:rc(),a:255}
 const changeInput = x => {
     const parent = x.parentElement
     const parse = document.querySelector("#parse-ch")
@@ -286,9 +287,14 @@ const convert = async () => {
 }
 const update = async interval => {
     const palete = document.querySelector("#palete");
+    let tmp = document.querySelectorAll("input.inp[type=number]")
     // buffer for color
     const fnc = () => {
         palete.style.backgroundColor=`rgb(${color.r},${color.g},${color.b},${color.a})`
+        
+        tmp[0].value = color.r 
+        tmp[1].value = color.g
+        tmp[2].value = color.b
         convert()
     }
     fnc()
