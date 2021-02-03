@@ -32,7 +32,7 @@ body{
 }
 body{
     background-color: #202225;
-    background-image: url(./img/bg1.svg), url(./img/bg2.svg);
+    background-image: url(/img/bg1.svg), url(/img/bg2.svg);
     background-repeat: no-repeat, no-repeat;
     background-position: bottom left, bottom right;
     background-size: contain;
@@ -100,7 +100,7 @@ clr{
     height: 200px;
     z-index: 1;
     opacity: 0.1;
-    background-image: url('./img/palete.png');
+    background-image: url('/img/palete.png');
     background-repeat: no-repeat;
     background-position: 50% 0;
     background-size: cover;
