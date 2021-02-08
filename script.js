@@ -273,11 +273,44 @@ const fillFormats = () => {
     })
 }
 const initEvents = () => {
-    let tmp = document.querySelectorAll("input.inp[type=number]")
-    tmp[0].oninput = e => color.r = +e.target.value
-    tmp[1].oninput = e => color.g = +e.target.value
-    tmp[2].oninput = e => color.b = +e.target.value
-    tmp = undefined
+    const file_input = document.querySelector('input[type=file]')
+    const canvas = document.querySelector('canvas')
+    file_input.onchange = e => {
+        const getImgWH = x => {
+            return new Promise((res,rej) => {
+                const _url_ = window.URL || window.webkitURL;
+                const img = new Image();
+                _url_ || rej('url obj not found');
+                img || rej('can`t create img');
+                x || rej('empty input');
+                img.onload = e => res({w:e.target.width,h:e.target.height,img});
+                img.src = _url_.createObjectURL(x)
+            })
+        }
+    
+        if (file_input&&canvas) {
+            getImgWH(e.target.files[0])
+            .then(res=>{
+                // canvas.setAttribute("width",`${res.w}px`)
+                // canvas.setAttribute("height",`${res.h}px`)
+                canvas.style.cursor = 'crosshair'
+                canvas.getContext('2d').drawImage(res.img, 0, 0, res.w, res.h);
+                canvas.onclick = x => {
+                    const res = {
+                        x : x.x - x.target.offsetLeft,
+                        y : x.y - x.target.offsetTop,
+                    }
+                    const _color_ = canvas.getContext('2d').getImageData(res.x, res.y, 1, 1).data
+                    color.r = _color_[0]
+                    color.g = _color_[1]
+                    color.b = _color_[2]
+                    console.log(res);
+                    //console.log(x,x.target,res,color,`rgb(${_color_[0]},${_color_[1]},${_color_[2]},${_color_[3]})`);
+                }
+            })
+        }
+    }
+    canvas.onclick = () => file_input.click()
 }
 const convert = async () => {
     formats.forEach(x => {
@@ -292,9 +325,6 @@ const update = async interval => {
     const fnc = () => {
         palete.style.backgroundColor=`rgb(${color.r},${color.g},${color.b},${color.a})`
         
-        tmp[0].value = color.r 
-        tmp[1].value = color.g
-        tmp[2].value = color.b
         convert()
     }
     fnc()
