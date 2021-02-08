@@ -44,7 +44,7 @@ body::before{
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: #e73c7e;
+    background-color: #e73c7e6b;
     color: white;
     padding: 10px;
     border-radius: 0px 0px 20px 0px;
@@ -76,8 +76,8 @@ body::before{
 .inp[type=number]{
     width: 50px;
 }
-clr{
-    --s: 200px;
+clr, canvas.container{
+    --s: 250px;
     display: block;
     width: var(--s);
     height: var(--s);
@@ -85,6 +85,10 @@ clr{
     background-color: rgb(68, 68, 68);
     /*background: linear-gradient(-45deg,#ee7752, #e73c7e)*/
 
+}
+canvas.container{
+    cursor: pointer;
+    background-image: url('./img/file.png');
 }
 .container>clr>div>p>input{
     width: 50px;
@@ -96,8 +100,8 @@ clr{
     content: ' ';
     display: block;
     position: absolute;
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     z-index: 1;
     opacity: 0.1;
     background-image: url('/img/palete.png');
@@ -198,11 +202,20 @@ gradline{
 .copyright{
     font-family: lite;
 }
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
     .container{
         flex-direction: column;
     }
     links{
         flex-direction: row;
+    }
+    gradline{
+        width: 300px;
+    }
+    body::before{
+        border-radius: 0px 20px 0px 0px;
+        transform: rotate(90deg) translateX(55px) translateY(55px);
+        background-color: #e73c7e6b;
+        position: fixed;
     }
 }
