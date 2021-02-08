@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="data:image/png;base64,==">
     <title>Color Convertor</title>
-    <link rel="stylesheet" href="./src/min.css">
-    <script src="./src/min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./script.js"></script>
 </head>
 <body>
     <main>
@@ -26,29 +26,14 @@
                     <img src="./img/instagram.png" alt="">
                 </a>
             </links>
-            <clr class="container" style="flex-direction:column">
-                <div>
-                    Select color
-                    <input autocomplete="off" type="color">
-                    <p>
-                        <label>red: </label>
-                        <input type="number" class="inp" value="255" min="0" max="255" autocomplete="off" >
-                    </p>
-                    <p>
-                        <label>green: </label>
-                        <input type="number" class="inp" value="255" min="0" max="255" autocomplete="off" >
-                    </p>
-                    <p>
-                        <label>blue: </label>
-                        <input type="number" class="inp" value="255" min="0" max="255" autocomplete="off" >
-                    </p>
-                </div>
-            </clr>
+            <canvas class="container">
+                Select file..
+                <input style="display: none;" type="file">
+            </canvas>
         </div>
         <div id="parse">
             <select onchange="changeInput(this)" autocomplete="off">
                 <option>auto...</option>
-                <option>from image</option>
             </select>    
             <div id="parse-ch"><input id="auto-parse" autocomplete="off" placeholder="some color write here" inputelement="true" type="parse"></div>
         </div>
