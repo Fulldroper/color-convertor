@@ -1,7 +1,6 @@
 const rc = () => Math.floor(Math.random() * Math.floor(255))
 const color = {r:rc(),g:rc(),b:rc(),a:255}
 const changeInput = x => {
-    const parent = x.parentElement
     const parse = document.querySelector("#parse-ch")
     const format = formats.find(el => el.name == x.selectedOptions[0].value)
     if (format) {
@@ -10,32 +9,6 @@ const changeInput = x => {
     } else {
         console.log(x);
     }
-    // switch (x.selectedOptions[0].value) {
-
-    //     case 'HEX':;break;
-    //     case 'HEXA':;break;
-    //     case 'WEBSAFE':;break;
-    //     case 'RGB':;break;
-    //     case 'RGB %':;break;
-    //     case 'RGBA':;break;
-    //     case 'RGBA %':;break;
-    //     // soon //
-        
-    //     case 'auto...':;break;
-    //     case 'HSL':;break;
-    //     case 'HSLA':;break;
-    //     case 'CMYK':;break;
-    //     case 'XYZ':;break;
-    //     case 'LAB':;break;
-    //     case 'HSB/HSV':;break;
-    //     case 'Ncol':;break;
-    //     case 'Hwb':;break;
-    //     case 'from image':
-    //         parent.querySelector('input[inputelement=true]')  
-    //      <input disabled autocomplete="off" style="transform:translateX(25px)" type="file">  
-    //     ;break;
-    // }
-    // parent.querySelector('input[inputelement=true]')
 }
 const formats = [
     {
@@ -338,5 +311,9 @@ const copy = that => {
 window.onload = () => {
     fillFormats()
     initEvents()
+    document.querySelector("canvas.container").ondblclick = e => {
+        e.target.querySelector(`input[type="file"]`).click()
+    }
     update(500)
+    changeInput({selectedOptions:[{value:'HEX'}]})
 }

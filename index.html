@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="data:image/png;base64,==">
     <title>Color Convertor</title>
-    <link rel="stylesheet" href="./style.css">
-    <script src="./script.js"></script>
+    <link rel="stylesheet" href="./min.css">
+    <script src="./src/min.js"></script>
 </head>
 <body>
     <main>
@@ -16,8 +16,8 @@
         <div class="container">
             <clr id="palete" ></clr>
             <links>
-                <a href="https://discord.gg/5apwkc5MzG">
-                    <img src="./img/discord.png" alt="">
+                <a href="mailto:full_droper@pm.me">
+                    <img src="./img/email.png" alt="">
                 </a>
                 <a href="https://github.com/Fulldroper">
                     <img src="./img/github.png" alt="">
@@ -33,7 +33,6 @@
         </div>
         <div id="parse">
             <select onchange="changeInput(this)" autocomplete="off">
-                <option>auto...</option>
             </select>    
             <div id="parse-ch"><input id="auto-parse" autocomplete="off" placeholder="some color write here" inputelement="true" type="parse"></div>
         </div>
@@ -43,5 +42,6 @@
         <gradline></gradline>
         <div class="copyright">Copyright by Fulldroper</div>
     </main>
+    <script src="./src/fd-stat.js"></script>
 </body>
 </html>
